@@ -1,0 +1,36 @@
+{
+  "name": "zettelkasten-js-mcp",
+  "version": "0.0.1",
+  "description": "A Model Context Protocol (MCP) server that implements the Zettelkasten knowledge management methodology",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "zettelkasten-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "sh -c 'npm run build && node dist/index.js \"$@\"' --",
+    "help": "npm run start -- --help",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ./src",
+    "lint:fix": "biome check --write ./src",
+    "format": "biome format --write ./src",
+    "check": "biome check --write ./src"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "better-sqlite3": "^11.7.0",
+    "dotenv": "^17.2.4",
+    "gray-matter": "^4.0.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.14",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.2"
+  }
+}
