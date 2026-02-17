@@ -14,6 +14,7 @@ import { type DBLink, initDb } from "../models/database.js";
 import type { Link, LinkType, Note, NoteType, Tag } from "../models/types.js";
 import { createLogger } from "../utils/logger.js";
 import { noteToMarkdown, parseNoteFromMarkdown } from "../utils/markdown.js";
+import { getNotesDir } from "../utils/path/get-notes-dir.js";
 
 const logger = createLogger("NoteRepository", config.logLevel);
 
@@ -22,7 +23,7 @@ export class NoteRepository {
   private db: Database.Database;
 
   constructor() {
-    this.notesDir = config.getNotesDir();
+    this.notesDir = getNotesDir(config.notesDir);
     this.db = initDb();
 
     // Initialize by rebuilding index if needed

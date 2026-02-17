@@ -1,14 +1,26 @@
-/**
- * Configuration module for the Zettelkasten MCP server
- * Initializes and exports the fully configured config object
- */
-
 import { config as dotenvConfig } from "dotenv";
-import { ZettelkastenConfig } from "./config-class.js";
+import packageJson from "../../package.json" with { type: "json" };
 
-// Load .env file
 dotenvConfig();
 
-export const config = new ZettelkastenConfig();
+/**
+ * Plain configuration object for the Zettelkasten MCP server
+ */
+export const config = {
+  // Storage configuration
+  notesDir: process.env.ZETTELKASTEN_NOTES_DIR || "data/notes",
 
-export type { ZettelkastenConfig } from "./config-class.js";
+  // Database configuration
+  databasePath:
+    process.env.ZETTELKASTEN_DATABASE_PATH || "data/db/zettelkasten.db",
+
+  // Server configuration (from package.json)
+  serverName: packageJson.name,
+  serverVersion: packageJson.version,
+
+  // Date format for ID generation (using ISO format for timestamps)
+  idDateFormat: "%Y%m%dT%H%M%S",
+
+  // Logging configuration
+  logLevel: process.env.ZETTELKASTEN_LOG_LEVEL || "INFO",
+} as const;

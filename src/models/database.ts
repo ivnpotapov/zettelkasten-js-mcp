@@ -5,13 +5,14 @@
 import Database from "better-sqlite3";
 
 import { config } from "../config/index.js";
+import { getDatabasePath } from "../utils/path/get-database-path.js";
 import { LinkType, NoteType } from "./types.js";
 
 /**
  * Initialize the database and create tables if they don't exist
  */
 export function initDb(): Database.Database {
-  const dbPath = config.getDatabasePath();
+  const dbPath = getDatabasePath(config.databasePath);
   const db = new Database(dbPath);
 
   // Enable foreign keys

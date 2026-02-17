@@ -7,6 +7,8 @@
 import { config } from "./config/index.js";
 import { ZettelkastenMcpServer } from "./server/mcp-server.js";
 import { createLogger } from "./utils/logger.js";
+import { getDatabasePath } from "./utils/path/get-database-path.js";
+import { getNotesDir } from "./utils/path/get-notes-dir.js";
 
 const logger = createLogger("Main", config.logLevel);
 
@@ -14,13 +16,13 @@ const logger = createLogger("Main", config.logLevel);
  * Main function
  */
 async function main(): Promise<void> {
-  logger.info(`Using SQLite database: ${config.getDatabasePath()}`);
+  logger.info(`Using SQLite database: ${getDatabasePath(config.databasePath)}`);
 
   // Ensure directories exist
   try {
-    config.getNotesDir();
+    getNotesDir(config.notesDir);
 
-    config.getDatabasePath();
+    getDatabasePath(config.databasePath);
   } catch (e) {
     logger.error("Failed to create directories", e as Error);
 
