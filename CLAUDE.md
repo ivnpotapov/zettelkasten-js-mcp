@@ -40,6 +40,52 @@ npm run help
 
 ## Architecture
 
+### Modular Architecture (DDD-Inspired)
+
+The codebase follows a **four-layer clean architecture** with dependency inversion:
+
+```
+src/
+├── domain/                    # Pure business logic (no infrastructure)
+│   ├── entities/
+│   │   └── note.ts           # Note, Link, Tag value objects + factory methods
+│   ├── interfaces/
+│   │   └── repository.ts     # INoteRepository interface
+│   └── services/
+│       ├── link-service.ts   # LinkType inverses, validation
+│       └── similarity-service.ts  # Similarity algorithm
+│
+├── infrastructure/            # External concerns
+│   └── persistence/
+│       ├── interfaces/
+│       │   └── file-store.ts  # IMarkdownFileStore, ISqliteIndex
+│       ├── markdown-file-store.ts
+│       ├── sqlite-index.ts
+│       └── dual-storage-note-repository.ts
+│
+├── application/               # Use cases (orchestration)
+│   ├── factory.ts            # Dependency injection
+│   └── use-cases/
+│       ├── create-note.ts
+│       ├── search-notes.ts
+│       ├── create-link.ts
+│       └── ... (one per user action)
+│
+└── interfaces/                # External systems
+    └── mcp/
+        ├── server.ts         # MCP server setup
+        └── tool-handlers/
+            └── index.ts      # All tool registrations
+```
+
+### Dependency Rules
+
+**Critical**: Dependencies flow **inward** only:
+- `interfaces/` → `application/` → `infrastructure/` → `domain/`
+- Domain layer has **zero** dependencies on other layers
+- Infrastructure implements domain interfaces
+- Use cases depend on domain interfaces, not concrete implementations
+
 ### Dual Storage Model
 
 The system uses a dual storage approach that is fundamental to understanding data flow:
@@ -54,42 +100,22 @@ The system uses a dual storage approach that is fundamental to understanding dat
    - Automatically rebuilt from Markdown files when needed (via `zk_rebuild_index` tool or on startup if counts don't match)
    - Never contains data that doesn't exist in the Markdown files
 
-### Layer Structure
-
-```
-src/
-├── server/mcp-server.ts    # MCP server, tool registration (@modelcontextprotocol/sdk)
-├── services/
-│   ├── zettel-service.ts  # Business logic for notes and links
-│   └── search-service.ts  # Search operations (central notes, orphans, date ranges)
-├── storage/
-│   └── note-repository.ts  # Dual storage layer (Markdown files + SQLite)
-├── models/
-│   ├── types.ts         # TypeScript interfaces (Note, Link, Tag, enums)
-│   └── database.ts      # SQLite schema initialization
-├── config/
-│   └── config-class.ts   # Environment-based configuration (notes dir, db path)
-├── utils/
-│   ├── markdown.ts       # Markdown serialization/deserialization with gray-matter
-│   ├── id-generator.ts   # Timestamp-based note ID generation
-│   └── logger.ts        # Logging utility
-└── index.ts            # Entry point
-```
-
 ### Key Data Flow
 
-When creating/updating notes:
-1. `ZettelService` handles business logic
-2. `NoteRepository.create()` or `update()` writes to Markdown file
-3. `NoteRepository.indexNote()` updates SQLite index
+**When creating/updating notes:**
+1. Use case (e.g., `CreateNoteUseCase`) orchestrates the operation
+2. `NoteFactory.create()` validates and creates the domain entity
+3. `DualStorageNoteRepository.create()` writes to Markdown file (source of truth)
+4. `SqliteIndex.indexNote()` updates the database index
 
-When searching:
-1. Queries use SQLite for performance
-2. Full note data loaded from Markdown files as needed
+**When searching:**
+1. Use case delegates to repository
+2. `SqliteIndex.query()` returns note IDs matching criteria
+3. `MarkdownFileStore.read()` loads full note data from filesystem
 
 ### Bidirectional Link Semantics
 
-Links have inverse types (e.g., `extends` ↔ `extended_by`). When creating bidirectional links via `createLink()`, the inverse link type is automatically applied. See `ZettelService.getInverseLinkType()` for the mapping.
+Links have inverse types (e.g., `extends` ↔ `extended_by`). When creating bidirectional links via `CreateLinkUseCase`, `LinkService.getInverseLinkType()` provides the inverse type mapping.
 
 ### Configuration
 
