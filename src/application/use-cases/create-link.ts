@@ -4,9 +4,10 @@
  */
 
 import {
+  addLinkToNote,
+  createLink as createNoteLink,
   LinkType,
   type Note,
-  NoteFactory,
 } from "../../domain/entities/note.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 import type { LinkService } from "../../domain/services/link-service.js";
@@ -71,14 +72,14 @@ export class CreateLinkUseCase {
 
     if (!linkExists) {
       // Create and add link to source note
-      const link = NoteFactory.createLink({
+      const link = createNoteLink({
         sourceId: input.sourceId,
         targetId: input.targetId,
         linkType,
         description: input.description,
       });
 
-      const updatedSource = NoteFactory.addLink(sourceNote, link);
+      const updatedSource = addLinkToNote(sourceNote, link);
       this.noteRepo.update(updatedSource);
     }
 
@@ -93,14 +94,14 @@ export class CreateLinkUseCase {
       );
 
       if (!reverseLinkExists) {
-        const reverseLink = NoteFactory.createLink({
+        const reverseLink = createNoteLink({
           sourceId: input.targetId,
           targetId: input.sourceId,
           linkType: inverseType,
           description: input.description,
         });
 
-        updatedTarget = NoteFactory.addLink(targetNote, reverseLink);
+        updatedTarget = addLinkToNote(targetNote, reverseLink);
         this.noteRepo.update(updatedTarget);
       } else {
         updatedTarget = targetNote;

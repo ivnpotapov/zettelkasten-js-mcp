@@ -4,8 +4,8 @@
  */
 
 import {
+  createNote,
   type Note,
-  NoteFactory,
   type NoteType,
 } from "../../domain/entities/note.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
@@ -18,7 +18,7 @@ export interface CreateNoteInput {
   content: string;
   noteType?: string;
   tags?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -38,7 +38,7 @@ export class CreateNoteUseCase {
       : undefined;
 
     // Use factory to create note with validation
-    const note = NoteFactory.create({
+    const note = createNote({
       title: input.title,
       content: input.content,
       noteType: noteTypeEnum,

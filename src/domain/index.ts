@@ -4,12 +4,17 @@
 
 // Entities
 export {
-  Link,
-  LinkType,
-  Note,
-  NoteFactory,
+  addLinkToNote,
+  addTagToNote,
+  createLink as createNoteLink,
+  createNote,
+  type Link,
+  type LinkType,
+  type Note,
   NoteType,
-  Tag,
+  removeLinkFromNote,
+  removeTagFromNote,
+  type Tag,
 } from "./entities/note.js";
 
 // Interfaces

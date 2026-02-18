@@ -358,7 +358,7 @@ export class SqliteIndex implements ISqliteIndex {
     const rows = this.db
       .prepare("SELECT * FROM links WHERE source_id = ?")
       .all(noteId) as DBLink[];
-    return this.mapDbLinksToLinks(noteId, rows);
+    return this.mapDbLinksToLinks(rows);
   }
 
   /**
@@ -369,13 +369,13 @@ export class SqliteIndex implements ISqliteIndex {
     const rows = this.db
       .prepare("SELECT * FROM links WHERE target_id = ?")
       .all(noteId) as DBLink[];
-    return this.mapDbLinksToLinks(noteId, rows);
+    return this.mapDbLinksToLinks(rows);
   }
 
   /**
    * Map database link records to domain Link objects
    */
-  private mapDbLinksToLinks(sourceId: string, rows: DBLink[]): Link[] {
+  private mapDbLinksToLinks(rows: DBLink[]): Link[] {
     return rows.map((row) => ({
       sourceId: row.source_id,
       targetId: row.target_id,

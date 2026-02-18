@@ -55,7 +55,7 @@ export interface NoteMetadata {
   tags?: string | string[];
   created?: string;
   updated?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -70,7 +70,7 @@ export interface Note {
   links: Link[];
   createdAt: Date;
   updatedAt: Date;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -91,7 +91,7 @@ export interface CreateNoteInput {
   content: string;
   noteType?: NoteType;
   tags?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -103,7 +103,7 @@ export interface UpdateNoteInput {
   content?: string;
   noteType?: NoteType;
   tags?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

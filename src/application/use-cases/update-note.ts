@@ -3,7 +3,12 @@
  * Handles partial updates with automatic timestamp management
  */
 
-import { type Note, NoteFactory } from "../../domain/entities/note.js";
+import {
+  addTagToNote,
+  type Note,
+  type NoteType,
+  removeTagFromNote,
+} from "../../domain/entities/note.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
@@ -15,7 +20,7 @@ export interface UpdateNoteInput {
   content?: string;
   noteType?: string;
   tags?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -48,7 +53,7 @@ export class UpdateNoteUseCase {
       updated.content = input.content;
     }
     if (input.noteType !== undefined) {
-      updated.noteType = input.noteType as any;
+      updated.noteType = input.noteType as NoteType;
     }
     if (input.tags !== undefined) {
       updated.tags = input.tags.map((name) => ({ name }));
@@ -70,7 +75,7 @@ export class UpdateNoteUseCase {
       throw new Error(`Note with ID ${noteId} not found`);
     }
 
-    const updated = NoteFactory.addTag(note, tagName);
+    const updated = addTagToNote(note, tagName);
     return this.noteRepo.update(updated);
   }
 
@@ -83,7 +88,7 @@ export class UpdateNoteUseCase {
       throw new Error(`Note with ID ${noteId} not found`);
     }
 
-    const updated = NoteFactory.removeTag(note, tagName);
+    const updated = removeTagFromNote(note, tagName);
     return this.noteRepo.update(updated);
   }
 }

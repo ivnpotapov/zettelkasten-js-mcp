@@ -14,19 +14,6 @@ import {
 } from "../models/types.js";
 
 /**
- * Default note template
- */
-const _DEFAULT_NOTE_TEMPLATE =
-  "# {title}\n\n" +
-  "## Metadata\n" +
-  "- Created: {created_at}\n" +
-  "- Tags: {tags}\n\n" +
-  "## Content\n\n" +
-  "{content}\n\n" +
-  "## Links\n" +
-  "{links}\n";
-
-/**
  * Parse a note from markdown content with frontmatter
  */
 export function parseNoteFromMarkdown(content: string, id?: string): Note {
@@ -149,7 +136,7 @@ export function parseNoteFromMarkdown(content: string, id?: string): Note {
   const updatedAt = updatedStr ? new Date(updatedStr) : createdAt;
 
   // Extract other metadata
-  const extraMetadata: Record<string, any> = {};
+  const extraMetadata: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(metadata)) {
     if (!["id", "title", "type", "tags", "created", "updated"].includes(key)) {
       extraMetadata[key] = value;

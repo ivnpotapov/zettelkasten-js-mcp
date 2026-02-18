@@ -3,7 +3,7 @@
  * Handles bidirectional link removal
  */
 
-import { type Note, NoteFactory } from "../../domain/entities/note.js";
+import { type Note, removeLinkFromNote } from "../../domain/entities/note.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
@@ -36,7 +36,7 @@ export class RemoveLinkUseCase {
     }
 
     // Remove link from source to target
-    const updatedSource = NoteFactory.removeLink(sourceNote, targetId);
+    const updatedSource = removeLinkFromNote(sourceNote, targetId);
     this.noteRepo.update(updatedSource);
 
     // Handle bidirectional removal
@@ -44,7 +44,7 @@ export class RemoveLinkUseCase {
     if (bidirectional) {
       const targetNote = this.noteRepo.get(targetId);
       if (targetNote) {
-        updatedTarget = NoteFactory.removeLink(targetNote, sourceId);
+        updatedTarget = removeLinkFromNote(targetNote, sourceId);
         this.noteRepo.update(updatedTarget);
       }
     }

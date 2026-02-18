@@ -4,7 +4,7 @@
  * Maintains Markdown files as source of truth with SQLite as index
  */
 
-import type { Link, Note, NoteType, Tag } from "../../domain/entities/note.js";
+import type { Link, Note, Tag } from "../../domain/entities/note.js";
 import type {
   INoteRepository,
   SearchOptions,

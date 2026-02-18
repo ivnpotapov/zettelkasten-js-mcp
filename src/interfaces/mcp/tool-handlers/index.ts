@@ -7,7 +7,6 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 import type { Application } from "../../../application/factory.js";
-import { LinkType, NoteType } from "../../../models/types.js";
 
 /**
  * Register all tool handlers with the MCP server
@@ -36,8 +35,6 @@ export function registerToolHandlers(
  * Format error response consistently
  */
 function formatErrorResponse(error: Error): string {
-  const errorId = Math.random().toString(36).substring(2, 10);
-
   if (
     error.message.includes("not found") ||
     error.message.includes("does not exist")
@@ -75,10 +72,6 @@ function registerCreateNote(server: McpServer, app: Application): void {
     },
     async (args) => {
       try {
-        const noteType = args.note_type
-          ? (args.note_type as NoteType)
-          : NoteType.PERMANENT;
-
         const tagList = args.tags
           ? args.tags
               .split(",")
@@ -297,10 +290,6 @@ function registerCreateLink(server: McpServer, app: Application): void {
     },
     async (args) => {
       try {
-        const linkType = args.link_type
-          ? (args.link_type as LinkType)
-          : LinkType.REFERENCE;
-
         app.createLink.execute({
           sourceId: args.source_id,
           targetId: args.target_id,
@@ -927,7 +916,6 @@ function registerRebuildIndex(server: McpServer, app: Application): void {
     {},
     async () => {
       try {
-        const noteCountBefore = app.getNote.all().length;
         const result = app.rebuildIndex.execute();
 
         return {

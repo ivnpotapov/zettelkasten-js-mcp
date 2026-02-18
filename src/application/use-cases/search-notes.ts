@@ -4,7 +4,6 @@
  */
 
 import type { Note, SearchResult } from "../../domain/entities/note.js";
-import { NoteType } from "../../domain/entities/note.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**

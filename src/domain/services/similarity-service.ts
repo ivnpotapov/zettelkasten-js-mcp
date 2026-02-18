@@ -51,7 +51,6 @@ export class SimilarityService {
       if (otherNote.id === baseNote.id) continue;
 
       const score = this.calculateSimilarity(
-        baseNote,
         otherNote,
         baseTags,
         baseLinks,
@@ -73,7 +72,6 @@ export class SimilarityService {
    * Weight: 40% tags, 20% outgoing links, 20% incoming links, 20% direct connections
    */
   private calculateSimilarity(
-    baseNote: Note,
     otherNote: Note,
     baseTags: Set<string>,
     baseLinks: Set<string>,

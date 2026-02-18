@@ -3,7 +3,7 @@
  * Following dependency inversion principle - infrastructure implements these
  */
 
-import type { Link, LinkType, Note, NoteType, Tag } from "../entities/note.js";
+import type { Link, Note, NoteType, Tag } from "../entities/note.js";
 
 /**
  * Search options for finding notes
