@@ -3,16 +3,19 @@
  * Handles bidirectional link removal
  */
 
-import { type Note, removeLinkFromNote } from "../../domain/entities/note.js";
+import {
+  type Note,
+  removeLinkFromNote,
+} from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
  * Result of link removal
  */
-export interface RemoveLinkResult {
+export type RemoveLinkResult = {
   sourceNote: Note;
   targetNote: Note | null; // null if bidirectional is false
-}
+};
 
 /**
  * Use case for removing links between notes

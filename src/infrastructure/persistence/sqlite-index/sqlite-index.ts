@@ -1,13 +1,18 @@
 /**
  * SQLite-based index implementation for efficient note querying
- * Handles database operations while delegating file storage to MarkdownFileStore
+ *
+ * Handles database operations while delegating file storage to MarkdownFileStore.
+ *
+ * @module infrastructure/persistence/sqlite-index
  */
 
 import type Database from "better-sqlite3";
-import type { Link, Note, Tag } from "../../domain/entities/note.js";
-import { LinkType, NoteType } from "../../models/types.js";
-import { createLogger } from "../../utils/logger.js";
-import type { ISqliteIndex } from "./interfaces/file-store.js";
+
+import type { Link, Note, Tag } from "../../../domain/entities/note/index.js";
+import { LINK_TYPE, NOTE_TYPE } from "../../../models/note/constants.js";
+import type { LinkType } from "../../../models/note/types.js";
+import { createLogger } from "../../../utils/logger.js";
+import type { ISqliteIndex, SqliteIndexConfig } from "./types.js";
 
 const logger = createLogger(
   "SqliteIndex",
@@ -15,22 +20,15 @@ const logger = createLogger(
 );
 
 /**
- * Database link record
+ * Database link record (internal representation)
  */
-interface DBLink {
+type DBLink = {
   source_id: string;
   target_id: string;
   link_type: string;
   description: string | null;
   created_at: string;
-}
-
-/**
- * Configuration for SqliteIndex
- */
-export interface SqliteIndexConfig {
-  db: Database.Database;
-}
+};
 
 /**
  * SQLite-based index for Zettelkasten notes
@@ -60,7 +58,7 @@ export class SqliteIndex implements ISqliteIndex {
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
         content TEXT NOT NULL,
-        note_type TEXT NOT NULL DEFAULT '${NoteType.PERMANENT}',
+        note_type TEXT NOT NULL DEFAULT '${NOTE_TYPE.PERMANENT}',
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
       );
@@ -91,7 +89,7 @@ export class SqliteIndex implements ISqliteIndex {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         source_id TEXT NOT NULL,
         target_id TEXT NOT NULL,
-        link_type TEXT NOT NULL DEFAULT '${LinkType.REFERENCE}',
+        link_type TEXT NOT NULL DEFAULT '${LINK_TYPE.REFERENCE}',
         description TEXT,
         created_at TEXT NOT NULL,
         UNIQUE(source_id, target_id, link_type),

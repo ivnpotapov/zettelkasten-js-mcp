@@ -1,21 +1,42 @@
 /**
- * Database models and initialization for better-sqlite3
+ * SQLite Database initialization utilities
+ *
+ * This module provides a standalone function to initialize a SQLite database
+ * for the Zettelkasten system. It creates the necessary schema for notes,
+ * tags, and links with proper indexes for efficient querying.
+ *
+ * @module infrastructure/persistence/sqlite-database-init
  */
 
 import Database from "better-sqlite3";
 
-import { config } from "../config/index.js";
-import { getDatabasePath } from "../utils/path/get-database-path.js";
-import { LinkType, NoteType } from "./types.js";
+import { config } from "../../config/index.js";
+import { LINK_TYPE, NOTE_TYPE } from "../../models/note/constants.js";
+import { getDatabasePath } from "../../utils/path/get-database-path.js";
 
 /**
- * Initialize the database and create tables if they don't exist
+ * Initialize SQLite database and create schema
+ *
+ * Creates a new SQLite database connection at the configured path,
+ * enables foreign keys, and creates all necessary tables and indexes
+ * if they don't already exist.
+ *
+ * @returns {Database.Database} Active SQLite database connection
+ *
+ * @example
+ * ```ts
+ * import { initSqliteDatabase } from "../infrastructure/index.js";
+ *
+ * const db = initSqliteDatabase();
+ * // Use db for queries...
+ * db.close();
+ * ```
  */
-export function initDb(): Database.Database {
+export function initSqliteDatabase(): Database.Database {
   const dbPath = getDatabasePath(config.databasePath);
   const db = new Database(dbPath);
 
-  // Enable foreign keys
+  // Enable foreign keys for referential integrity
   db.pragma("foreign_keys = ON");
 
   // Create notes table
@@ -24,7 +45,7 @@ export function initDb(): Database.Database {
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
       content TEXT NOT NULL,
-      note_type TEXT NOT NULL DEFAULT '${NoteType.PERMANENT}',
+      note_type TEXT NOT NULL DEFAULT '${NOTE_TYPE.PERMANENT}',
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
@@ -38,7 +59,7 @@ export function initDb(): Database.Database {
     );
   `);
 
-  // Create note_tags association table
+  // Create note_tags association table (many-to-many)
   db.exec(`
     CREATE TABLE IF NOT EXISTS note_tags (
       note_id TEXT NOT NULL,
@@ -49,13 +70,13 @@ export function initDb(): Database.Database {
     );
   `);
 
-  // Create links table
+  // Create links table (bidirectional relationships)
   db.exec(`
     CREATE TABLE IF NOT EXISTS links (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       source_id TEXT NOT NULL,
       target_id TEXT NOT NULL,
-      link_type TEXT NOT NULL DEFAULT '${LinkType.REFERENCE}',
+      link_type TEXT NOT NULL DEFAULT '${LINK_TYPE.REFERENCE}',
       description TEXT,
       created_at TEXT NOT NULL,
       UNIQUE(source_id, target_id, link_type),
@@ -75,45 +96,4 @@ export function initDb(): Database.Database {
   `);
 
   return db;
-}
-
-/**
- * DBNote interface for database records
- */
-export interface DBNote {
-  id: string;
-  title: string;
-  content: string;
-  note_type: string;
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * DBTag interface for database records
- */
-export interface DBTag {
-  id: number;
-  name: string;
-}
-
-/**
- * DBLink interface for database records
- */
-export interface DBLink {
-  id: number;
-  source_id: string;
-  target_id: string;
-  link_type: string;
-  description: string | null;
-  created_at: string;
-}
-
-/**
- * Note with tags and links from database
- */
-export interface DBNoteWithRelations extends DBNote {
-  tags: DBTag[];
-  outgoingLinks: DBLink[];
-  incomingLinks: DBLink[];
 }

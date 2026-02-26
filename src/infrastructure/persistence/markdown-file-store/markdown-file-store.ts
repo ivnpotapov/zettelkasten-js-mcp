@@ -1,26 +1,26 @@
 /**
  * Filesystem-based Markdown note storage implementation
- * Handles reading and writing notes as individual .md files with YAML frontmatter
+ *
+ * Handles reading and writing notes as individual .md files with YAML frontmatter.
+ *
+ * @module infrastructure/persistence/markdown-file-store
  */
 
 import fs from "node:fs";
 import path from "node:path";
-import type { Note } from "../../domain/entities/note.js";
-import { createLogger } from "../../utils/logger.js";
-import { noteToMarkdown, parseNoteFromMarkdown } from "../../utils/markdown.js";
-import type { IMarkdownFileStore } from "./interfaces/file-store.js";
+
+import type { Note } from "../../../domain/entities/note/index.js";
+import { createLogger } from "../../../utils/logger.js";
+import {
+  noteToMarkdown,
+  parseNoteFromMarkdown,
+} from "../../../utils/markdown.js";
+import type { IMarkdownFileStore, MarkdownFileStoreConfig } from "./types.js";
 
 const logger = createLogger(
   "MarkdownFileStore",
   process.env.ZETTELKASTEN_LOG_LEVEL ?? "INFO",
 );
-
-/**
- * Configuration for MarkdownFileStore
- */
-export interface MarkdownFileStoreConfig {
-  notesDirectory: string;
-}
 
 /**
  * Filesystem-based storage for Zettelkasten notes as Markdown files

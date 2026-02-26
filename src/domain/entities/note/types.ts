@@ -1,61 +1,47 @@
 /**
- * Domain entity representing a Zettelkasten note
- * Value object with factory methods for creation and updates
+ * Domain entity types for Zettelkasten notes
+ * Value objects with factory methods for creation and updates
  */
 
-import { generateId } from "../../utils/id-generator.js";
-
-/**
- * Types of notes in a Zettelkasten
- */
-export enum NoteType {
-  FLEETING = "fleeting",
-  LITERATURE = "literature",
-  PERMANENT = "permanent",
-  STRUCTURE = "structure",
-  HUB = "hub",
-}
+import { NOTE_TYPE } from "../../../models/note/constants.js";
+import type { LinkType, NoteType } from "../../../models/note/types.js";
+import { generateId } from "../../../utils/id-generator.js";
 
 /**
  * A tag for categorizing notes
  */
-export interface Tag {
+export type Tag = {
   name: string;
-}
+};
+
+/**
+ * Metadata stored in frontmatter
+ */
+export type NoteMetadata = {
+  id?: string;
+  title?: string;
+  type?: NoteType | string;
+  tags?: string | string[];
+  created?: string;
+  updated?: string;
+  [key: string]: unknown;
+};
 
 /**
  * A link between two notes
  */
-export interface Link {
+export type Link = {
   sourceId: string;
   targetId: string;
   linkType: LinkType;
   description?: string;
   createdAt: Date;
-}
-
-/**
- * Types of links between notes
- */
-export enum LinkType {
-  REFERENCE = "reference",
-  EXTENDS = "extends",
-  EXTENDED_BY = "extended_by",
-  REFINES = "refines",
-  REFINED_BY = "refined_by",
-  CONTRADICTS = "contradicts",
-  CONTRADICTED_BY = "contradicted_by",
-  QUESTIONS = "questions",
-  QUESTIONED_BY = "questioned_by",
-  SUPPORTS = "supports",
-  SUPPORTED_BY = "supported_by",
-  RELATED = "related",
-}
+};
 
 /**
  * A Zettelkasten note - domain entity
  */
-export interface Note {
+export type Note = {
   id: string;
   title: string;
   content: string;
@@ -65,17 +51,17 @@ export interface Note {
   createdAt: Date;
   updatedAt: Date;
   metadata: Record<string, unknown>;
-}
+};
 
 /**
  * A search result with a note and its relevance score
  */
-export interface SearchResult {
+export type SearchResult = {
   note: Note;
   score: number;
   matchedTerms: Set<string>;
   matchedContext: string;
-}
+};
 
 /**
  * Create a new note with validation
@@ -100,7 +86,7 @@ export function createNote(input: {
     id: generateId(),
     title: input.title.trim(),
     content: input.content,
-    noteType: input.noteType ?? NoteType.PERMANENT,
+    noteType: input.noteType ?? NOTE_TYPE.PERMANENT,
     tags: (input.tags ?? []).map((name) => ({ name })),
     links: [],
     createdAt: now,

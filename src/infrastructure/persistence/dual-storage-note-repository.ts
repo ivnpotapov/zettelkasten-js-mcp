@@ -4,16 +4,14 @@
  * Maintains Markdown files as source of truth with SQLite as index
  */
 
-import type { Link, Note, Tag } from "../../domain/entities/note.js";
+import type { Link, Note, Tag } from "../../domain/entities/note/index.js";
 import type {
   INoteRepository,
   SearchOptions,
 } from "../../domain/interfaces/repository.js";
 import { createLogger } from "../../utils/logger.js";
-import type {
-  IMarkdownFileStore,
-  ISqliteIndex,
-} from "./interfaces/file-store.js";
+import type { IMarkdownFileStore } from "./markdown-file-store/types.js";
+import type { ISqliteIndex } from "./sqlite-index/types.js";
 
 const logger = createLogger(
   "DualStorageNoteRepository",

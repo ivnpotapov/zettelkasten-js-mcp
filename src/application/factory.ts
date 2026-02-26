@@ -33,7 +33,7 @@ import {
 /**
  * Application container with all use cases
  */
-export interface Application {
+export type Application = {
   // Note operations
   createNote: CreateNoteUseCase;
   getNote: GetNoteUseCase;
@@ -57,7 +57,7 @@ export interface Application {
 
   // Cleanup
   shutdown: () => void;
-}
+};
 
 /**
  * Create the application with all dependencies wired up

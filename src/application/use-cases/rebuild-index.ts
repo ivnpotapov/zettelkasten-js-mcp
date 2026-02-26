@@ -8,10 +8,10 @@ import type { INoteRepository } from "../../domain/interfaces/repository.js";
 /**
  * Rebuild index result
  */
-export interface RebuildIndexResult {
+export type RebuildIndexResult = {
   notesProcessed: number;
   message: string;
-}
+};
 
 /**
  * Use case for rebuilding the note index

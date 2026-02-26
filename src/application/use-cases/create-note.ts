@@ -7,19 +7,19 @@ import {
   createNote,
   type Note,
   type NoteType,
-} from "../../domain/entities/note.js";
+} from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
  * Input for creating a note
  */
-export interface CreateNoteInput {
+export type CreateNoteInput = {
   title: string;
   content: string;
   noteType?: string;
   tags?: string[];
   metadata?: Record<string, unknown>;
-}
+};
 
 /**
  * Use case for creating Zettelkasten notes

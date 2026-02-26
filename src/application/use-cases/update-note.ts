@@ -8,20 +8,20 @@ import {
   type Note,
   type NoteType,
   removeTagFromNote,
-} from "../../domain/entities/note.js";
+} from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
  * Input for updating a note
  */
-export interface UpdateNoteInput {
+export type UpdateNoteInput = {
   noteId: string;
   title?: string;
   content?: string;
   noteType?: string;
   tags?: string[];
   metadata?: Record<string, unknown>;
-}
+};
 
 /**
  * Use case for updating Zettelkasten notes

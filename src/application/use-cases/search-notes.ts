@@ -3,20 +3,20 @@
  * Comprehensive search with multiple criteria support
  */
 
-import type { Note, SearchResult } from "../../domain/entities/note.js";
+import type { Note, SearchResult } from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
  * Search input options
  */
-export interface SearchInput {
+export type SearchInput = {
   query?: string;
   tags?: string[];
   noteType?: string;
   startDate?: Date;
   endDate?: Date;
   limit?: number;
-}
+};
 
 /**
  * Use case for searching Zettelkasten notes

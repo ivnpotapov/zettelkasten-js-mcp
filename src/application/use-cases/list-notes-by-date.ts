@@ -3,7 +3,7 @@
  * Supports filtering by created_at or updated_at
  */
 
-import type { Note } from "../../domain/entities/note.js";
+import type { Note } from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**

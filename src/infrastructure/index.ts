@@ -3,17 +3,17 @@
  */
 
 export { DualStorageNoteRepository } from "./persistence/dual-storage-note-repository.js";
-// Persistence interfaces
-export type {
-  IMarkdownFileStore,
-  ISqliteIndex,
-} from "./persistence/interfaces/file-store.js";
-// Persistence implementations
+// Markdown file storage
 export {
+  type IMarkdownFileStore,
   MarkdownFileStore,
   type MarkdownFileStoreConfig,
-} from "./persistence/markdown-file-store.js";
+} from "./persistence/markdown-file-store/index.js";
+// SQLite database initialization
+export { initSqliteDatabase } from "./persistence/sqlite-database-init.js";
+// SQLite index
 export {
+  type ISqliteIndex,
   SqliteIndex,
   type SqliteIndexConfig,
-} from "./persistence/sqlite-index.js";
+} from "./persistence/sqlite-index/index.js";

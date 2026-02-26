@@ -3,12 +3,12 @@
  * Following dependency inversion principle - infrastructure implements these
  */
 
-import type { Link, Note, NoteType, Tag } from "../entities/note.js";
+import type { Link, Note, NoteType, Tag } from "../entities/note/index.js";
 
 /**
  * Search options for finding notes
  */
-export interface SearchOptions {
+export type SearchOptions = {
   content?: string;
   title?: string;
   noteType?: NoteType | string;
@@ -20,13 +20,13 @@ export interface SearchOptions {
   createdBefore?: Date;
   updatedAfter?: Date;
   updatedBefore?: Date;
-}
+};
 
 /**
  * Repository interface for note persistence operations
  * Implementations must handle both Markdown files and SQLite index
  */
-export interface INoteRepository {
+export type INoteRepository = {
   /**
    * Create a new note (writes to both filesystem and index)
    */
@@ -99,4 +99,4 @@ export interface INoteRepository {
    * Close database connection
    */
   close?(): void;
-}
+};

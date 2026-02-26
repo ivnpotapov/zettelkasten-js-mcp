@@ -3,16 +3,16 @@
  * Identifies central notes in the knowledge network
  */
 
-import type { Note } from "../../domain/entities/note.js";
+import type { Note } from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**
  * Central note result with connection count
  */
-export interface CentralNoteResult {
+export type CentralNoteResult = {
   note: Note;
   connections: number;
-}
+};
 
 /**
  * Use case for finding central notes

@@ -3,7 +3,9 @@
  * Handles bidirectional link type mapping and validation
  */
 
-import { LinkType } from "../entities/note.js";
+import { LINK_TYPE } from "../../models/note/constants.js";
+import type { LinkType } from "../../models/note/types.js";
+import { isValidLinkType as isValidLinkTypeValue } from "../../utils/type-guards.js";
 
 /**
  * Domain service for managing link semantics
@@ -14,18 +16,18 @@ export class LinkService {
   constructor() {
     // Initialize the inverse link type mapping (immutable)
     const map = new Map<LinkType, LinkType>();
-    map.set(LinkType.REFERENCE, LinkType.REFERENCE);
-    map.set(LinkType.EXTENDS, LinkType.EXTENDED_BY);
-    map.set(LinkType.EXTENDED_BY, LinkType.EXTENDS);
-    map.set(LinkType.REFINES, LinkType.REFINED_BY);
-    map.set(LinkType.REFINED_BY, LinkType.REFINES);
-    map.set(LinkType.CONTRADICTS, LinkType.CONTRADICTED_BY);
-    map.set(LinkType.CONTRADICTED_BY, LinkType.CONTRADICTS);
-    map.set(LinkType.QUESTIONS, LinkType.QUESTIONED_BY);
-    map.set(LinkType.QUESTIONED_BY, LinkType.QUESTIONS);
-    map.set(LinkType.SUPPORTS, LinkType.SUPPORTED_BY);
-    map.set(LinkType.SUPPORTED_BY, LinkType.SUPPORTS);
-    map.set(LinkType.RELATED, LinkType.RELATED);
+    map.set(LINK_TYPE.REFERENCE, LINK_TYPE.REFERENCE);
+    map.set(LINK_TYPE.EXTENDS, LINK_TYPE.EXTENDED_BY);
+    map.set(LINK_TYPE.EXTENDED_BY, LINK_TYPE.EXTENDS);
+    map.set(LINK_TYPE.REFINES, LINK_TYPE.REFINED_BY);
+    map.set(LINK_TYPE.REFINED_BY, LINK_TYPE.REFINES);
+    map.set(LINK_TYPE.CONTRADICTS, LINK_TYPE.CONTRADICTED_BY);
+    map.set(LINK_TYPE.CONTRADICTED_BY, LINK_TYPE.CONTRADICTS);
+    map.set(LINK_TYPE.QUESTIONS, LINK_TYPE.QUESTIONED_BY);
+    map.set(LINK_TYPE.QUESTIONED_BY, LINK_TYPE.QUESTIONS);
+    map.set(LINK_TYPE.SUPPORTS, LINK_TYPE.SUPPORTED_BY);
+    map.set(LINK_TYPE.SUPPORTED_BY, LINK_TYPE.SUPPORTS);
+    map.set(LINK_TYPE.RELATED, LINK_TYPE.RELATED);
     this.inverseMap = map;
   }
 
@@ -41,7 +43,7 @@ export class LinkService {
    * Validate that a link type is valid
    */
   isValidLinkType(linkType: string): linkType is LinkType {
-    return Object.values(LinkType).includes(linkType as LinkType);
+    return isValidLinkTypeValue(linkType);
   }
 
   /**

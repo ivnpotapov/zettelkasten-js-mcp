@@ -6,30 +6,31 @@
 import {
   addLinkToNote,
   createLink as createNoteLink,
-  LinkType,
   type Note,
-} from "../../domain/entities/note.js";
+} from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 import type { LinkService } from "../../domain/services/link-service.js";
+import { LINK_TYPE } from "../../models/note/constants.js";
+import type { LinkType } from "../../models/note/types.js";
 
 /**
  * Input for creating a link
  */
-export interface CreateLinkInput {
+export type CreateLinkInput = {
   sourceId: string;
   targetId: string;
   linkType?: string;
   description?: string;
   bidirectional?: boolean;
-}
+};
 
 /**
  * Result of link creation
  */
-export interface LinkResult {
+export type LinkResult = {
   sourceNote: Note;
   targetNote: Note | null; // null if bidirectional is false
-}
+};
 
 /**
  * Use case for creating links between notes
@@ -58,7 +59,7 @@ export class CreateLinkUseCase {
     }
 
     // Parse link type
-    const linkType = (input.linkType as LinkType) ?? LinkType.REFERENCE;
+    const linkType = (input.linkType as LinkType) ?? LINK_TYPE.REFERENCE;
 
     // Validate link type
     if (!this.linkService.isValidLinkType(linkType)) {

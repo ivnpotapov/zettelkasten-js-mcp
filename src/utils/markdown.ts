@@ -3,15 +3,15 @@
  */
 
 import matter from "gray-matter";
-
-import {
-  type Link,
-  LinkType,
-  type Note,
-  type NoteMetadata,
-  NoteType,
-  type Tag,
-} from "../models/types.js";
+import type {
+  Link,
+  Note,
+  NoteMetadata,
+  Tag,
+} from "../domain/entities/note/index.js";
+import { LINK_TYPE, NOTE_TYPE } from "../models/note/constants.js";
+import type { LinkType, NoteType } from "../models/note/types.js";
+import { isValidLinkType, isValidNoteType } from "./type-guards.js";
 
 /**
  * Parse a note from markdown content with frontmatter
@@ -43,14 +43,9 @@ export function parseNoteFromMarkdown(content: string, id?: string): Note {
   }
 
   // Extract note type
-  let noteType = NoteType.PERMANENT;
-  const typeStr = metadata.type as string;
-  if (typeStr) {
-    const typeValues = Object.values(NoteType);
-    if (typeValues.includes(typeStr as NoteType)) {
-      noteType = typeStr as NoteType;
-    }
-  }
+  const noteType: NoteType = isValidNoteType(metadata.type as string)
+    ? (metadata.type as NoteType)
+    : NOTE_TYPE.PERMANENT;
 
   // Extract tags
   let tagNames: string[] = [];
@@ -58,8 +53,8 @@ export function parseNoteFromMarkdown(content: string, id?: string): Note {
     if (typeof metadata.tags === "string") {
       tagNames = metadata.tags
         .split(",")
-        .map((t) => t.trim())
-        .filter((t) => t);
+        .map((t: string) => t.trim())
+        .filter((t: string) => t);
     } else if (Array.isArray(metadata.tags)) {
       tagNames = metadata.tags.map((t) => String(t).trim()).filter((t) => t);
     }
@@ -108,11 +103,9 @@ export function parseNoteFromMarkdown(content: string, id?: string): Note {
           }
 
           // Validate link type
-          let linkType = LinkType.REFERENCE;
-          const typeValues = Object.values(LinkType);
-          if (typeValues.includes(linkTypeStr as LinkType)) {
-            linkType = linkTypeStr as LinkType;
-          }
+          const linkType: LinkType = isValidLinkType(linkTypeStr)
+            ? linkTypeStr
+            : LINK_TYPE.REFERENCE;
 
           links.push({
             sourceId: noteId,

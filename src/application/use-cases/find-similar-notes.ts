@@ -3,17 +3,17 @@
  * Uses domain SimilarityService for scoring
  */
 
-import type { Note } from "../../domain/entities/note.js";
+import type { Note } from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 import type { SimilarityService } from "../../domain/services/similarity-service.js";
 
 /**
  * Similarity result with note and score
  */
-export interface SimilarityResult {
+export type SimilarityResult = {
   note: Note;
   score: number;
-}
+};
 
 /**
  * Use case for finding similar notes

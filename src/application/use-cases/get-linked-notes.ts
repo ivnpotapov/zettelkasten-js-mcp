@@ -3,7 +3,7 @@
  * Handles directional link traversal
  */
 
-import type { Note } from "../../domain/entities/note.js";
+import type { Note } from "../../domain/entities/note/index.js";
 import type { INoteRepository } from "../../domain/interfaces/repository.js";
 
 /**

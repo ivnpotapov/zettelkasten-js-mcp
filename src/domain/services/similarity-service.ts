@@ -3,15 +3,15 @@
  * Implements the similarity algorithm based on shared tags, links, and connections
  */
 
-import type { Note } from "../entities/note.js";
+import type { Note } from "../entities/note/index.js";
 
 /**
  * Similarity calculation result
  */
-export interface SimilarityResult {
+export type SimilarityResult = {
   note: Note;
   score: number;
-}
+};
 
 /**
  * Domain service for calculating note similarity

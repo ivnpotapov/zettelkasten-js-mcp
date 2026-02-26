@@ -2,20 +2,12 @@
  * Domain layer - pure business logic with zero infrastructure dependencies
  */
 
+// Re-export common types from models for convenience
+export { LinkType, NoteType } from "../models/note/types.js";
+// Re-export type guards from utils
+export { isValidLinkType, isValidNoteType } from "../utils/type-guards.js";
 // Entities
-export {
-  addLinkToNote,
-  addTagToNote,
-  createLink as createNoteLink,
-  createNote,
-  type Link,
-  type LinkType,
-  type Note,
-  NoteType,
-  removeLinkFromNote,
-  removeTagFromNote,
-  type Tag,
-} from "./entities/note.js";
+export * from "./entities/note/index.js";
 
 // Interfaces
 export type {
